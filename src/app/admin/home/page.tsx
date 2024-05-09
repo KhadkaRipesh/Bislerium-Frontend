@@ -13,6 +13,20 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { getMessaging, getToken } from "firebase/messaging";
+import { initializeApp } from "firebase/app";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCM2AhEN5cwUqqjZeprEz39wpq5JsDnf-Y",
+  authDomain: "bislerium-245d4.firebaseapp.com",
+  projectId: "bislerium-245d4",
+  storageBucket: "bislerium-245d4.appspot.com",
+  messagingSenderId: "372157345596",
+  appId: "1:372157345596:web:a2710d6c26823780093839",
+  measurementId: "G-GT3DSKS03B",
+};
+const firebaseApp = initializeApp(firebaseConfig);
+const messaging = getMessaging(firebaseApp);
 
 const HomePage = () => {
   const cookies = useCookies();
@@ -21,6 +35,7 @@ const HomePage = () => {
   const [month, setMonth] = React.useState(0);
 
   useEffect(() => {
+    setToken();
     const fetchData = async () => {
       try {
         const response = await axios.get(
@@ -41,6 +56,43 @@ const HomePage = () => {
   }, [cookies, month]);
 
   console.log(stats);
+
+  async function setToken() {
+    try {
+      // Request the push notification permission from browser
+      const status = await Notification.requestPermission();
+      if (status && status === "granted") {
+        // Get new token from Firebase
+        const token = await getToken(messaging);
+        console.log("FCM Token:", token);
+        const userResponse = await axios.get(
+          `${baseURL}/api/User/get-current-user`,
+          {
+            headers: {
+              Authorization: `Bearer ${cookies.get("token")}`,
+            },
+          }
+        );
+        const currentUserID = userResponse.data.id;
+
+        if (currentUserID) {
+          const payload = { Token: token, UserID: currentUserID };
+          const res = await axios.post(
+            `${baseURL}/api/Firebase/save-token`,
+            payload,
+            {
+              headers: {
+                Authorization: `Bearer ${cookies.get("token")}`,
+              },
+            }
+          );
+          console.log("Save token", res);
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   return (
     <div>

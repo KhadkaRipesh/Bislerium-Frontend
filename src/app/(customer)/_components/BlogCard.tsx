@@ -1,10 +1,7 @@
 import { baseURL } from "@/core/constant/base_url";
-import { CircleEllipsis, Dot, EclipseIcon, List } from "lucide-react";
-import Image from "next/image";
+import { Dot } from "lucide-react";
 import Link from "next/link";
 import React from "react";
-import EditBlog from "../blog/_component/EditBlog";
-import DeleteBlog from "../blog/_component/DeleteBlog";
 
 const BlogCard = ({ blog }: { blog: Blog }) => {
   const formattedDate = blog?.createdAt
@@ -26,7 +23,7 @@ const BlogCard = ({ blog }: { blog: Blog }) => {
     <div className="w-full">
       <div>
         <Link href={`blog/${blog.slug}`}>
-          <img src={`${baseURL}/${blog.image}`} alt="" />
+          <img src={`${baseURL}/${blog.image}`} alt="" className="h-60 object-cover rounded-2xl" />
         </Link>
       </div>
       <div className="flex justify-between items-center mt-5">
