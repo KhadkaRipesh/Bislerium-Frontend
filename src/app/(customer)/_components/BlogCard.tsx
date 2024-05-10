@@ -13,12 +13,13 @@ const BlogCard = ({ blog }: { blog: Blog }) => {
       })
     : "";
 
-  const currentDate = new Date(blog?.createdAt).toLocaleString("en-US", {
+  const currentDate = new Date().toLocaleString("en-US", {
     weekday: "short",
     month: "long",
     day: "numeric",
     year: "numeric",
   });
+  
   return (
     <div className="w-full">
       <div>

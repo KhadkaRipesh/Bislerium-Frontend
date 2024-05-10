@@ -134,7 +134,7 @@ const SignIn = () => {
                   </FormItem>
                 )}
               />
-
+              <p>Forgot password?</p>
               <Button
                 type="submit"
                 disabled={!isValid || isSubmitting}
